@@ -1,0 +1,7 @@
+package com.ztech.practice;
+
+import java.util.Scanner;
+
+public class SwitchSample {
+
+}

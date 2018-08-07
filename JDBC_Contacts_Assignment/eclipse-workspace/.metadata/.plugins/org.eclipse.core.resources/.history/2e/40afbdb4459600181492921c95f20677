@@ -1,0 +1,28 @@
+package com.ztech.practice;
+
+import java.util.Scanner;
+
+public class MergeSort {
+	static void merge(int[] arr, int l, int m, int r) {
+		int[] sorted = new int[r - l + 1];
+	}
+
+	static void mergeSort(int n, int[] arr, int l, int r) {
+		if (l < r) {
+			int m = l + (r - l) / 2;
+			mergeSort(n, arr, l, m);
+			mergeSort(n, arr, m + 1, r);
+			merge(arr, l, m, r);
+		}
+	}
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		int[] arr = new int[n];
+		for (int i = 0; i < n; i++) {
+			arr[i] = sc.nextInt();
+		}
+		mergeSort(n, arr);
+	}
+}

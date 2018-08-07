@@ -1,0 +1,9 @@
+package com.ztech.practice;
+
+import java.util.Scanner;
+
+public class LeapSum {
+	public static void main(String args[]) {
+		
+	}
+}

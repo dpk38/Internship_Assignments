@@ -1,0 +1,35 @@
+git diff                        (working area vs local repository)
+[git add -> moves the file from working area to the staging area.]
+git diff --staged               (staging area vs local repository)
+git diff HEAD <commit_number>   (working area vs staging)
+git diff <commit_number1> <commit_number2>
+
+git revert <commit_number>      (Adds another commit - commits contain changed set)
+
+git log (head points to latest commit)
+git log --graph
+
+git reset <filename>    (removes file from stage)
+git checkout HEAD --<filename>      (discards all changes)  
+
+checkout - goes to specified commit | revert - changes and creates new 
+
+--------------------------
+whats staging area
+merging after resolving conflict in side branch
+why add newline
+--------------------------
+
+git pull origin master = git fetch origin master && git merge master origin/master
+
+forking - creating a copy of a remote repo of a different user (similar to branching but by a different user)
+cloning
+
+upstream (similar to origin for different user) - git remote add upstream <url>
+
+--------------------------
+
+git stash save "<message>"
+stashes current working directory with unique id and rolls back to current commit state
+git stash apply <stash_id>
+
