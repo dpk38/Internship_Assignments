@@ -371,10 +371,14 @@ public class DatabaseInsertion {
 		Connection con = db.openConnection();
 		
 		try {
-			ps = con.prepareStatement(Queries.UPDATE_NAME);
-			ps.setString(1, nameType);
-			ps.setString(2, newName);
-			ps.setInt(3, cid);
+			if (nameType.equals("firstName")) {
+				ps = con.prepareStatement(Queries.UPDATE_FIRST_NAME);
+			} else {
+				ps = con.prepareStatement(Queries.UPDATE_LAST_NAME);
+			}
+			ps.setString(1, newName);
+			ps.setInt(2, cid);
+			ps.executeUpdate();
 		} catch (SQLException e) {
 			System.out.print("Exception caught at updateName(): ");
 			e.printStackTrace();
