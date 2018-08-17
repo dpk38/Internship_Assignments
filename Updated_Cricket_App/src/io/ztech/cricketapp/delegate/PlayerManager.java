@@ -42,8 +42,8 @@ public class PlayerManager {
 		}
 	}
 	
-	public void updateTeamId(int teamId, int playerId) {
-		dao.updatePlayerTeam(teamId, playerId);
+	public void updateTeamId(Team team) {
+		dao.updatePlayerTeam(team);
 	}
 	
 	public void updatePlayerName(int playerId, String newName, String query) {

@@ -222,14 +222,15 @@ public class CricketDAO {
 		}
 	}
 	
-	public void updatePlayerTeam(int teamId, int playerId) {
+	public void updatePlayerTeam(Team team) {
 		PreparedStatement ps = null;
 		Connection con = connector.openConnection();
 		
 		try {
 			ps = con.prepareStatement(Queries.UPDATE_PLAYER_TEAM);
-			ps.setInt(1, teamId);
-			ps.setInt(2, playerId);
+			ps.setInt(1, team.getTeamId());
+			Player player = team.getPlayers().get(0);
+			ps.setInt(2, player.getPlayerId());
 			ps.execute();
 		} catch (SQLException e) {
 			System.out.println("Exception caught at updatePlayerTeam(): " + e);

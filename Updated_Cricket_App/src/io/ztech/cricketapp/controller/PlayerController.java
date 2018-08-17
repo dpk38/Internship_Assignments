@@ -24,8 +24,8 @@ public class PlayerController {
 		playerManager.displayPlayer(user);
 	}
 	
-	public void updateTeamId(int teamId, int playerId) {
-		playerManager.updateTeamId(teamId, playerId);
+	public void updateTeamId(Team team) {
+		playerManager.updateTeamId(team);
 	}
 	
 	public void updatePlayerName(int playerId, String newName, String query) {

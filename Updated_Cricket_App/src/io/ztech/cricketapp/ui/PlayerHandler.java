@@ -94,7 +94,8 @@ public class PlayerHandler {
 			team.setTeamId(newTeamId);
 			Player player = new Player();
 			player.setPlayerId(playerId);
-			playerController.updateTeamId(newTeamId, playerId);
+			team.addPlayer(player);
+			playerController.updateTeamId(team);
 		} else {
 			teamController.displayTeams(user);
 			int playerId = choosePlayer(user);
