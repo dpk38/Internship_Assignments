@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 import io.ztech.cricketapp.beans.BallStats;
 import io.ztech.cricketapp.beans.LineUp;
@@ -18,7 +19,7 @@ import io.ztech.cricketapp.controller.TeamController;
 import io.ztech.cricketapp.controller.Validator;
 
 public class MatchHandler {
-	
+	Logger logger;
 	Scanner scanner;
 	Validator validator;
 	PlayerHandler playerHandler;
@@ -26,6 +27,7 @@ public class MatchHandler {
 	MatchController matchController;
 	
 	public MatchHandler() {
+		logger = Logger.getLogger(UserEntry.class.getName());
 		scanner = new Scanner(System.in);
 		playerHandler = new PlayerHandler();
 		teamController = new TeamController();
@@ -35,7 +37,7 @@ public class MatchHandler {
 	
 	public void createMatch(User user) {
 		Match newMatch = new Match();
-		System.out.println(UserMessages.SELECT_TWO_TEAMS);
+		logger.info(UserMessages.SELECT_TWO_TEAMS);
 		int teamAid = playerHandler.chooseTeam(user);
 		int teamBid = playerHandler.chooseTeam(user);
 		Team teamA = teamController.fetchTeam(teamAid);
@@ -52,7 +54,7 @@ public class MatchHandler {
 		char retry;
 		do {
 			retry = 'n';
-			System.out.println(UserMessages.ENTER_MATCH_DATE);
+			logger.info(UserMessages.ENTER_MATCH_DATE);
 			date = scanner.nextLine();
 			if (!(validator.validateInput(Regex.dateRegex, date, UserMessages.INVALID_DATE))) {
 				retry = 'y';
@@ -66,9 +68,9 @@ public class MatchHandler {
 	public LineUp getLineUp(Team team) {
 		LineUp lineUp = new LineUp();
 		lineUp.setTeamId(team.getTeamId());
-		System.out.print(UserMessages.NUMBER_OF_PLAYERS + team.getTeamName());
+		logger.info(UserMessages.NUMBER_OF_PLAYERS + team.getTeamName());
 		int numberOfPlayers = scanner.nextInt();
-		System.out.println(UserMessages.ENTER_LINE_UP + team.getTeamName());
+		logger.info(UserMessages.ENTER_LINE_UP + team.getTeamName());
 		ArrayList<Integer> order = new ArrayList<Integer>();
 		for (int i = 0; i < numberOfPlayers; i++) {
 			order.add(scanner.nextInt());
@@ -89,7 +91,7 @@ public class MatchHandler {
 		match.setStatus("ongoing");
 		match.setTossWonBy(tossCoin(match));
 		
-		System.out.println(UserMessages.CHOSE_TO_BAT);
+		logger.info(UserMessages.CHOSE_TO_BAT);
 		int battingTeamId = scanner.nextInt();
 		scanner.nextLine();
 		if (battingTeamId == match.getTeamA().getTeamId()) {
@@ -104,29 +106,29 @@ public class MatchHandler {
 			bowlers = match.getTeamALineUp().getPlayerId();
 		}
 		showPlayers(batsmen);
-		System.out.println(UserMessages.CHOOSE_ONSTRIKE);
+		logger.info(UserMessages.CHOOSE_ONSTRIKE);
 		onStrike = choosePlayer(match, battingTeam);
 		batsmen.remove((Integer) onStrike);
-		System.out.println(UserMessages.CHOOSE_OFFSTRIKE);
+		logger.info(UserMessages.CHOOSE_OFFSTRIKE);
 		offStrike = choosePlayer(match, battingTeam);
 		batsmen.remove((Integer) offStrike);
 		showPlayers(bowlers);
-		System.out.println(UserMessages.CHOOSE_BOWLER);
+		logger.info(UserMessages.CHOOSE_BOWLER);
 		bowler = choosePlayer(match, bowlingTeam);
 		
-		System.out.println(UserMessages.INPUT_FORMAT);
+		logger.info(UserMessages.INPUT_FORMAT);
 		while (overCount < 20.0) {
 			int score = 0;
 			boolean wicketTaken = false;
-			System.out.println(UserMessages.CURRENT_SCORE + totalScore + UserMessages.ON_STRIKE + onStrike + UserMessages.OFF_STRIKE + offStrike + UserMessages.BOWLER + bowler);
+			logger.info(UserMessages.CURRENT_SCORE + totalScore + UserMessages.ON_STRIKE + onStrike + UserMessages.OFF_STRIKE + offStrike + UserMessages.BOWLER + bowler);
 			String ballPlayed, extra = "";
 			do {
-				System.out.print(UserMessages.ENTER_BALL);
+				logger.info(UserMessages.ENTER_BALL);
 				ballPlayed = scanner.nextLine();
 				if (validator.validateInput(Regex.ballRegex, ballPlayed, UserMessages.INVALID_BALL)) {
 					break;
 				} else {
-					System.out.println(UserMessages.INPUT_FORMAT);
+					logger.info(UserMessages.INPUT_FORMAT);
 					continue;
 				}
 			} while (true);
@@ -154,11 +156,11 @@ public class MatchHandler {
 			}
 			if (wicketTaken) {
 				if (batsmen.isEmpty()) {
-					System.out.println(UserMessages.ALL_PLAYERS_OUT + totalScore);
+					logger.info(UserMessages.ALL_PLAYERS_OUT + totalScore);
 					break;
 				}
 				showPlayers(batsmen);
-				System.out.println(UserMessages.CHOOSE_NEXT_BATSMAN);
+				logger.info(UserMessages.CHOOSE_NEXT_BATSMAN);
 				onStrike = choosePlayer(match, battingTeam);
 				batsmen.remove((Integer) onStrike);
 			}
@@ -171,10 +173,10 @@ public class MatchHandler {
 				int previousBowler = bowler;
 				showPlayers(bowlers);
 				do {
-					System.out.println(UserMessages.CHOOSE_BOWLER);
+					logger.info(UserMessages.CHOOSE_BOWLER);
 					bowler = choosePlayer(match, bowlingTeam);
 					if (bowler == previousBowler) {
-						System.out.println(UserMessages.SAME_BOWLER);
+						logger.info(UserMessages.SAME_BOWLER);
 						char decision = scanner.nextLine().charAt(0);
 						if (decision == 'y') {
 							break;
@@ -192,13 +194,13 @@ public class MatchHandler {
 		int matchId;
 		do {
 			matchController.displayMatches(user);
-			System.out.print(UserMessages.CHOOSE_MATCH);
+			logger.info(UserMessages.CHOOSE_MATCH);
 			matchId = scanner.nextInt();
 			scanner.nextLine();
 			if (matchController.searchMatch(user, matchId)) {
 				break;
 			} else {
-				System.out.println(UserMessages.NO_SUCH_MATCH);
+				logger.info(UserMessages.NO_SUCH_MATCH);
 			}
 		} while (true);
 		return matchId;
@@ -207,11 +209,11 @@ public class MatchHandler {
 	public int tossCoin(Match match) {
 		Random random = new Random();
 		if (random.nextInt(2) == 0) {
-			System.out.println();
-			System.out.println(UserMessages.TOSS_RESULT + match.getTeamA().getTeamId());
+			logger.info(" ");
+			logger.info(UserMessages.TOSS_RESULT + match.getTeamA().getTeamId());
 			return match.getTeamA().getTeamId();
 		} else {
-			System.out.println(UserMessages.TOSS_RESULT + match.getTeamB().getTeamId());
+			logger.info(UserMessages.TOSS_RESULT + match.getTeamB().getTeamId());
 			return match.getTeamB().getTeamId();
 		}
 	}
@@ -224,12 +226,12 @@ public class MatchHandler {
 			scanner.nextLine();
 			if (team.getTeamId() == match.getTeamA().getTeamId()) {
 				if (!(match.getTeamALineUp().getPlayerId().contains(id))) {
-					System.out.print(UserMessages.INVALID_PLAYER);
+					logger.info(UserMessages.INVALID_PLAYER);
 					retry = 'y';
 				}
 			} else {
 				if (!(match.getTeamBLineUp().getPlayerId().contains(id))) {
-					System.out.print(UserMessages.INVALID_PLAYER);
+					logger.info(UserMessages.INVALID_PLAYER);
 					retry = 'y';
 				}
 			}
@@ -239,9 +241,9 @@ public class MatchHandler {
 
 	public void showPlayers(ArrayList<Integer> players) {
 		ArrayList<Player> playerList = matchController.fetchPlayers(players);
-		System.out.println(UserMessages.PLAYER_NAME_TABLE);
+		logger.info(UserMessages.PLAYER_NAME_TABLE);
 		for (Player player : playerList) {
-			System.out.println(player.getPlayerId() + "\t" + player.getFirstName() + "\t" + player.getLastName());
+			logger.info(player.getPlayerId() + "\t" + player.getFirstName() + "\t" + player.getLastName());
 		}
 	}
 }

@@ -2,19 +2,23 @@ package io.ztech.cricketapp.delegate;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 import io.ztech.cricketapp.beans.Player;
 import io.ztech.cricketapp.beans.Team;
 import io.ztech.cricketapp.beans.User;
 import io.ztech.cricketapp.constants.UserMessages;
 import io.ztech.cricketapp.dao.CricketDAO;
+import io.ztech.cricketapp.ui.UserEntry;
 
 public class TeamManager {
 	Scanner scanner;
+	Logger logger;
 	PlayerManager playerManager;
 	CricketDAO dao;
 	
 	public TeamManager() {
+		logger = Logger.getLogger(UserEntry.class.getName());
 		scanner = new Scanner(System.in);
 		playerManager = new PlayerManager();
 		dao = new CricketDAO();
@@ -23,8 +27,8 @@ public class TeamManager {
 	public void displayTeams(User user) {
 		ArrayList<Team> teamList = dao.fetchTeams(user);
 		for (Team team : teamList) {
-			System.out.println(UserMessages.TEAM_TABLE);
-			System.out.println(team.getTeamId() + "\t" + team.getTeamName());
+			logger.info(UserMessages.TEAM_TABLE);
+			logger.info(team.getTeamId() + "\t" + team.getTeamName());
 			playerManager.printPlayerDetails(team);
 		}
 	}

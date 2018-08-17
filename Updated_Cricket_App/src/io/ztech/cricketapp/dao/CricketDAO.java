@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import io.ztech.cricketapp.beans.BallStats;
 import io.ztech.cricketapp.beans.LineUp;
@@ -86,11 +87,12 @@ public class CricketDAO {
 		try {
 			ArrayList<Team> teamList = user.getTeams();
 			Team team = teamList.get(teamList.size() - 1);
-			
+			System.out.println("----" + team.getTeamName());
 			ps = con.prepareStatement(Queries.INSERT_TEAM);
 			ps.setString(1, team.getTeamName());
 			ps.setInt(2, team.getUser().getUserId());
 			ps.execute();
+			System.out.println("----" + Arrays.toString(team.getPlayers().toArray()));
 			for (Player player : team.getPlayers()) {
 				player.setTeamId(getRecentTeamId());
 				insertPlayer(player);
@@ -239,14 +241,18 @@ public class CricketDAO {
 		}
 	}
 	
-	public void updatePlayerName(int playerId, String newName, String query) {
+	public void updatePlayerName(Player player, String query) {
 		PreparedStatement ps = null;
 		Connection con = connector.openConnection();
 		
 		try {
 			ps = con.prepareStatement(query);
-			ps.setString(1, newName);
-			ps.setInt(2, playerId);
+			if (query.equals(Queries.UPDATE_PLAYER_FIRST_NAME)) {
+				ps.setString(1, player.getFirstName());
+			} else {
+				ps.setString(1, player.getLastName());
+			}
+			ps.setInt(2, player.getPlayerId());
 			ps.execute();
 		} catch (SQLException e) {
 			System.out.println("Exception caught at updatePlayerName(): " + e);

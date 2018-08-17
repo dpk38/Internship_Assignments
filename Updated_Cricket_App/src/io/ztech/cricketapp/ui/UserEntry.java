@@ -1,6 +1,7 @@
 package io.ztech.cricketapp.ui;
 
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 import io.ztech.cricketapp.beans.User;
 import io.ztech.cricketapp.constants.UserMessages;
@@ -9,11 +10,13 @@ import io.ztech.cricketapp.controller.UserController;
 
 public class UserEntry {
 	
+	Logger logger;
 	Scanner scanner;
 	UserController userController;
 	
 	public UserEntry() {
 		userController = new UserController();
+		logger = Logger.getLogger(UserEntry.class.getName());
 		scanner = new Scanner(System.in);
 	}
 	
@@ -23,10 +26,10 @@ public class UserEntry {
 		User verifiedUser = null;
 		do {
 			retry = 'n';
-			System.out.print(UserMessages.ENTER_USER_NAME);
+			logger.info(UserMessages.ENTER_USER_NAME);
 			user.setUserName(scanner.nextLine());
 			if (!userController.checkUser(user)) {
-				System.out.println(UserMessages.NO_SUCH_USER);
+				logger.info(UserMessages.NO_SUCH_USER);
 				UserOptions option = UserOptions.values()[scanner.nextInt() - 1];
 				scanner.nextLine();
 				switch (option) {
@@ -36,15 +39,15 @@ public class UserEntry {
 					retry = 'y';
 					break;
 				default:
-					System.out.println(UserMessages.INVALID_CHOICE);
+					logger.info(UserMessages.INVALID_CHOICE);
 					retry = 'y';
 				}
 			} else {
-				System.out.print(UserMessages.ENTER_PASSWORD);
+				logger.info(UserMessages.ENTER_PASSWORD);
 				user.setPassword(scanner.nextLine());
 				verifiedUser = userController.verifyUser(user); 
 				if (verifiedUser == null) {
-					System.out.println(UserMessages.INCORRECT_PASSWORD);
+					logger.info(UserMessages.INCORRECT_PASSWORD);
 					retry = 'y';
 				} else {
 					retry = 'n';
@@ -57,13 +60,13 @@ public class UserEntry {
 	public User signUp() {
 		User newUser = new User();
 		do {
-			System.out.print(UserMessages.ENTER_FIRST_NAME);
+			logger.info(UserMessages.ENTER_FIRST_NAME);
 			newUser.setFirstName(scanner.nextLine());
-			System.out.print(UserMessages.ENTER_LAST_NAME);
+			logger.info(UserMessages.ENTER_LAST_NAME);
 			newUser.setLastName(scanner.nextLine());
-			System.out.print(UserMessages.ENTER_USER_NAME);
+			logger.info(UserMessages.ENTER_USER_NAME);
 			newUser.setUserName(scanner.nextLine());
-			System.out.print(UserMessages.ENTER_PASSWORD);
+			logger.info(UserMessages.ENTER_PASSWORD);
 			newUser.setPassword(scanner.nextLine());
 		} while (!userController.createUser(newUser));
 		return newUser;

@@ -1,5 +1,6 @@
 package io.ztech.cricketapp.controller;
 
+import io.ztech.cricketapp.beans.Player;
 import io.ztech.cricketapp.beans.Team;
 import io.ztech.cricketapp.beans.User;
 import io.ztech.cricketapp.delegate.PlayerManager;
@@ -28,7 +29,7 @@ public class PlayerController {
 		playerManager.updateTeamId(team);
 	}
 	
-	public void updatePlayerName(int playerId, String newName, String query) {
-		playerManager.updatePlayerName(playerId, newName, query);
+	public void updatePlayerName(Player player, String query) {
+		playerManager.updatePlayerName(player, query);
 	}
 }
